@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Defines the FileStorage class
+Contains the FileStorage class
 """
 
 import json
@@ -44,7 +44,7 @@ class FileStorage:
         """serializes __objects to the JSON file (path: __file_path)"""
         json_objects = {}
         for key in self.__objects:
-            json_objects[key] = self.__objects[key].to_dict(save_check=True)
+            json_objects[key] = self.__objects[key].to_dict()
         with open(self.__file_path, 'w') as f:
             json.dump(json_objects, f)
 
@@ -52,26 +52,11 @@ class FileStorage:
         """deserializes the JSON file to __objects"""
         try:
             with open(self.__file_path, 'r') as f:
-                jl = json.load(f)
+                jl= json.load(f)
             for key in jl:
                 self.__objects[key] = classes[jl[key]["__class__"]](**jl[key])
         except:
             pass
-
-    def get(self, cls, id):
-        """Retrieving object by class and/or id
-        """
-        key = cls.__name__ + '.' + id
-
-        if key in self.__objects:
-            return self.__objects[key]
-        else:
-            return None
-
-    def count(self, cls=None):
-        """Return count of objects in storage
-        """
-        return len(self.all(cls))
 
     def delete(self, obj=None):
         """delete obj from __objects if it’s inside"""
